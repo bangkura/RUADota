@@ -38,13 +38,9 @@ public class Test {
         for(Hero hero: heroes) {
             history.setHeroId(hero.getId());
             System.out.println(hero.getName());
-            try {
-                MatchHistory matchHistory = history.excute();
-                for(Match match: matchHistory.getMatches()) {
-                    System.out.println(match.getMatch_id());
-                }
-            } catch (WrongUrlException e) {
-                System.out.println(e.getMsg());
+            MatchHistory matchHistory = history.excute();
+            for(Match match: matchHistory.getMatches()) {
+                System.out.println(match.getMatch_id());
             }
         }
     }

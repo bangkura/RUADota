@@ -68,8 +68,13 @@ public class GetMatchHistory extends BaseApi {
         return this;
     }
 
-    public MatchHistory excute() throws WrongUrlException{
-        TreeNode resultNode = getResultNode();
+    public MatchHistory excute(){
+        TreeNode resultNode;
+        try {
+             resultNode = getResultNode();
+        } catch(WrongUrlException e) {
+            return null;
+        }
         MatchHistory matchHistory = null;
         try {
             matchHistory = mapper.treeToValue(resultNode, MatchHistory.class);

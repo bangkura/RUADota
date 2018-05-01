@@ -18,12 +18,16 @@ public class GetMatchDetails extends BaseApi{
         return this;
     }
 
-    public MatchDetails excute() throws WrongUrlException{
+    public MatchDetails excute(){
         MatchDetails matchDetail = null;
-        TreeNode result = getResultNode();
+        TreeNode result;
+        try {
+            result = getResultNode();
+        } catch(WrongUrlException e) {
+            return null;
+        }
         try {
             matchDetail = mapper.treeToValue(result, MatchDetails.class);
-            System.out.println(matchDetail);
         } catch(JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -21,7 +21,7 @@ public class ItemDaoImp implements ItemDao{
             return items;
         else {
             synItems();
-            return getAllItems();
+            return mongo.findAll(Item.class);
         }
     }
 

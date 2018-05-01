@@ -21,7 +21,7 @@ public class HeroDaoImp implements HeroDao{
             return heroes;
         else {
             syncHeroes();
-            return getAllHeroes();
+            return mongo.findAll(Hero.class);
         }
     }
 

@@ -1,5 +1,8 @@
 package com.bangkura.Dota2ApiWrapper.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MiniPlayer {
     private long account_id;
     private int player_slot;

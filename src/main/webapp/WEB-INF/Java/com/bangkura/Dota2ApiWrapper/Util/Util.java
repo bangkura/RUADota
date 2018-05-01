@@ -7,6 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Util {
+
+    private static Object lock = new Object();
+
     public static String DoHttpRequest(String requestUrl) {
         String result = "";
         BufferedInputStream bin = null;
@@ -14,7 +17,12 @@ public class Util {
         try {
             URL url = new URL(requestUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
+            synchronized (lock) {
+                long startTime = System.currentTimeMillis();
+                connection.connect();
+                while (System.currentTimeMillis() < startTime + 100) {
+                }
+            }
             bin = new BufferedInputStream(connection.getInputStream());
             out = new ByteArrayOutputStream();
             int size = 0;

@@ -1,7 +1,10 @@
 package com.bangkura.Dota2ApiWrapper.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchHistory {
     private int status;
     private int num_results;

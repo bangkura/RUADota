@@ -1,5 +1,6 @@
 package com.RUADota.Controller;
 
+import com.RUADota.DAO.MatchDao;
 import com.bangkura.Dota2ApiWrapper.Api.GetPlayerSummaries;
 import com.bangkura.Dota2ApiWrapper.Model.MatchDetails;
 import com.bangkura.Dota2ApiWrapper.Model.PlayerSummary;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequestMapping(method = RequestMethod.GET)
 public class PlayerController {
     @Autowired
-    private MongoOperations mongo;
+    private MatchDao matchDao;
 
     @RequestMapping(value = "/players/{id}")
     public @ResponseBody PlayerSummary getPlayer(@PathVariable("id") long id) {
@@ -27,6 +28,6 @@ public class PlayerController {
     @RequestMapping(value="players/{id}/matches")
     public @ResponseBody
     List<MatchDetails> getMatches(@PathVariable("id") long id) {
-        return new ArrayList<MatchDetails>();
+        return matchDao.getMatchDetailsByUserId(id);
     }
 }
