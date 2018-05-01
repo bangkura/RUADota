@@ -1,17 +1,60 @@
 package com.bangkura.Dota2ApiWrapper.Util;
 
+import com.bangkura.Dota2ApiWrapper.Model.HeroEntity;
+import com.bangkura.Dota2ApiWrapper.Model.Replay;
+import com.bangkura.Dota2ApiWrapper.Model.Tick;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.processor.entities.Entities;
 import skadistats.clarity.processor.entities.UsesEntities;
+import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnTickStart;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.SimpleRunner;
+import skadistats.clarity.source.InputStreamSource;
+import skadistats.clarity.util.Predicate;
+import skadistats.clarity.wire.s2.proto.S2UserMessages;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @UsesEntities
 public class ReplayProcessor {
+    private Replay replay = new Replay();
+    private List<Tick> ticks = new ArrayList<>();
+
     @OnTickStart
     public void onTickStart(Context ctx, boolean synthetic) throws IOException {
+        Float realTime = timeConvert(ctx);
+        if(realTime != null && realTime.floatValue() > 0) {
+            Tick tick = new Tick();
+            tick.setTime(realTime.longValue());
+            List<HeroEntity> herolist = new ArrayList<>();
+            tick.setHeroEntities(herolist);
+            Entities entities = ctx.getProcessor(Entities.class);
+            Iterator<Entity> heroite = entities.getAllByPredicate(new Predicate<Entity>() {
+                @Override
+                public boolean apply(Entity entity) {
+                    if(entity.getDtClass().getDtName().startsWith("CDOTA_Unit_Hero"))
+                        return true;
+                    else
+                        return false;
+                }
+            });
+            while(heroite.hasNext()) {
+                Entity entity = heroite.next();
+                HeroEntity heroEntity = new HeroEntity();
+                heroEntity.setLevel((int)entity.getProperty("m_iCurrentLevel"));
+                heroEntity.setName(entity.getDtClass().getDtName());
+                herolist.add(heroEntity);
+            }
+            ticks.add(tick);
+        }
+    }
+
+    private Float timeConvert(Context ctx) {
         Entities entities = ctx.getProcessor(Entities.class);
         Float gameTime = null;
         String TIME_PRE_PROP = "m_pGameRules.m_flPreGameStartTime";
@@ -54,10 +97,23 @@ public class ReplayProcessor {
                 }
             }
         }
-        System.out.println(realTime.intValue()/60 + ":" + realTime.intValue()%60);
-
-
+        return realTime;
     }
 
+    //@OnMessage(S2UserMessages.CUserMessageSayText2.class)
+    public void onMessage(Context ctx, S2UserMessages.CUserMessageSayText2 message) {
+        System.out.format("%s: %s\n", message.getParam1(), message.getParam2());
+    }
+
+    public Replay excute(InputStream is) {
+        try {
+            SimpleRunner runner = new SimpleRunner(new InputStreamSource(is));
+            runner.runWith(this);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        replay.setTicks(ticks);
+        return replay;
+    }
 
 }

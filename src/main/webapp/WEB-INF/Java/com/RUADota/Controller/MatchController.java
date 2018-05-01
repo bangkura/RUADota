@@ -15,23 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MatchController {
-    @Autowired
-    private MongoOperations mongo;
 
     @RequestMapping("/matches/{match_id}")
     public @ResponseBody MatchDetails getMatch(@PathVariable("match_id") long matchId) {
         MatchDetails match = null;
-        match = mongo.findOne(Query.query(Criteria.where("match_id").is(matchId)), MatchDetails.class);
-        if(match != null)
-            return match;
-        GetMatchDetails api = new GetMatchDetails();
-        api.setMatchId(matchId);
-        try {
-            match = api.excute();
-        } catch (WrongUrlException e) {
-            match =  new MatchDetails();
-        }
-        mongo.save(match);
         return match;
     }
 }

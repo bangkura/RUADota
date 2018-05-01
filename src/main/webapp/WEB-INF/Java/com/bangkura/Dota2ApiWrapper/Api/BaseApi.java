@@ -27,7 +27,7 @@ public abstract class BaseApi{
         return builder.toString();
     }
 
-    public TreeNode getResultNode() throws WrongUrlException{
+    public TreeNode getResultNode() throws WrongUrlException {
         TreeNode resultNode = null;
         try {
             TreeNode rootNode = mapper.readTree(Util.DoHttpRequest(getApiUrl()));
@@ -38,5 +38,18 @@ public abstract class BaseApi{
         if(resultNode == null)
             throw new WrongUrlException(getApiUrl());
         return resultNode;
+    }
+
+    public TreeNode getResponseNode() throws WrongUrlException {
+        TreeNode responseNode = null;
+        try {
+            TreeNode rootNode = mapper.readTree(Util.DoHttpRequest(getApiUrl()));
+            responseNode = rootNode.path("response");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        if(responseNode == null)
+            throw new WrongUrlException(getApiUrl());
+        return responseNode;
     }
 }

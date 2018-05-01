@@ -8,35 +8,35 @@ import com.fasterxml.jackson.core.TreeNode;
 
 import java.util.ArrayList;
 
-public class GetHeros extends BaseApi{
+public class GetHeroes extends BaseApi{
     private static final String LANGUAGE = "language";
     private static final String ITEMIZEDONLY = "itemizedonly";
 
-    public GetHeros() {
+    public GetHeroes() {
         baseUrl = Defines.GET_HEROS;
     }
 
-    public GetHeros setLanguage(String language) {
+    public GetHeroes setLanguage(String language) {
         parameters.put(LANGUAGE, language);
         return this;
     }
 
-    public GetHeros setItemizedOnly(String tag) {
+    public GetHeroes setItemizedOnly(String tag) {
         parameters.put(ITEMIZEDONLY, tag);
         return this;
     }
 
-    public ArrayList<Hero> excute() throws WrongUrlException {
+    public ArrayList<Hero> excute(){
         ArrayList<Hero> result = new ArrayList<Hero>();
-        TreeNode resultNode = getResultNode();
-        TreeNode itemsNode = resultNode.path("heroes");
         try {
+            TreeNode resultNode = getResultNode();
+            TreeNode itemsNode = resultNode.path("heroes");
             for(int i = 0; i < itemsNode.size(); ++i) {
                 TreeNode itemNode = itemsNode.get(i);
                 Hero hero = mapper.treeToValue(itemNode, Hero.class);
                 result.add(hero);
             }
-        } catch(JsonProcessingException e) {
+        } catch(JsonProcessingException | WrongUrlException e) {
             e.printStackTrace();
         }
         return result;

@@ -21,17 +21,17 @@ public class GetGameItems extends BaseApi{
     }
 
 
-    public ArrayList<Item> excute() throws WrongUrlException{
+    public ArrayList<Item> excute(){
         ArrayList<Item> result = new ArrayList<Item>();
-        TreeNode resultNode = getResultNode();
-        TreeNode itemsNode = resultNode.path("items");
         try {
+            TreeNode resultNode = getResultNode();
+            TreeNode itemsNode = resultNode.path("items");
             for(int i = 0; i < itemsNode.size(); ++i) {
                 TreeNode itemNode = itemsNode.get(i);
                 Item item = mapper.treeToValue(itemNode, Item.class);
                 result.add(item);
             }
-        } catch(JsonProcessingException e) {
+        } catch(JsonProcessingException | WrongUrlException e) {
             e.printStackTrace();
         }
         return result;

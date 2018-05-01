@@ -7,5 +7,6 @@ public final class Defines {
     public static final String GET_GAME_ITEMS = "http://api.steampowered.com/IEconDOTA2_570/GetGameItems/v1";
     public static final String GET_HEROS = "http://api.steampowered.com/IEconDOTA2_570/GetHeroes/v1";
     public static final String GET_REPLAY_SALT = "https://api.opendota.com/api/replays";
+    public static final String GET_PLAYER_SUMMARIES = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
     public static final String KEY = "03DC061C50D69AA8310E974BFB00A8CB";
 }

@@ -1,6 +1,7 @@
 package com.bangkura.Dota2ApiWrapper.Util;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,5 +39,10 @@ public class Util {
             }
         }
         return result;
+    }
+
+    public static String thirtytwoToSixtyFour(long id) {
+        BigInteger bigInteger = new BigInteger(id+"");
+        return bigInteger.add(new BigInteger("76561197960265728")).toString();
     }
 }
